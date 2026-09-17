@@ -1,0 +1,74 @@
+seed: 12345
+device: auto
+
+image:
+  roi_size: 224
+  clahe_clip_limit: 2.0
+  clahe_tile_grid: [8, 8]
+  gaussian_kernel: 5
+  gaussian_sigma: 0.0
+  sliding_patch_size: 64
+  sliding_stride: 32
+  variance_threshold: 0.0005
+  positive_iou: 0.50
+  negative_iou: 0.10
+  point_positive_radius: 12
+  point_exclusion_radius: 24
+
+wavelet:
+  family: db4
+  levels: 3
+  pca_variance_grid: [0.90, 0.95, 0.99]
+  pca_default: 0.95
+  expected_raw_features: 36
+  expected_projected_features: 20
+
+model:
+  efficientnet_name: tf_efficientnetv2_s.in21k_ft_in1k
+  efficientnet_projection: 128
+  cbam_reduction: 16
+  cbam_spatial_kernel: 7
+  vit_name: vit_base_patch16_224.augreg_in21k_ft_in1k
+  vit_projection: 256
+  fusion_hidden_dim: 256
+  fusion_heads: 4
+  dropout: 0.10
+  pretrained: true
+  freeze_backbones_initially: true
+
+fuzzy:
+  sigma_uncertainty_fraction: 0.20
+  epsilon: 1.0e-8
+  max_km_iterations: 50
+  km_tolerance: 1.0e-4
+  consequent_values:
+    likely_benign: 0.10
+    uncertain: 0.40
+    moderate: 0.60
+    likely_malignant: 0.90
+
+art:
+  vigilance_grid: [0.70, 0.80, 0.85, 0.90]
+  vigilance: 0.85
+  beta_grid: [0.30, 0.50, 0.70]
+  beta: 0.50
+  alpha: 0.001
+  mapping: unrestricted_majority_vote
+  max_categories: null
+
+training:
+  learning_rate_grid: [0.0001, 0.00005]
+  learning_rate: 0.0001
+  batch_size_grid: [8, 16, 32]
+  batch_size: 16
+  weight_decay: 0.0001
+  max_epochs: 50
+  patience: 5
+  outer_folds: 5
+  inner_folds: 3
+  num_workers: 4
+  threshold_method: youden
+
+bootstrap:
+  iterations: 1000
+  confidence: 0.95

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+data/
+features/
+checkpoints/
+results/*.csv
+results/*.json
+results/*.npz
+!results/README.md
+.DS_Store

@@ -1,0 +1,49 @@
+repository: https://github.com/vahidMCSD/An-Interpretable-Hybrid-Deep-Learning-and-Interval-Type-2-Fuzzy-Framework
+seed: 12345
+image:
+  roi_size: 224
+  clahe_clip_limit: 2.0
+  clahe_tile_grid: [8, 8]
+  gaussian_kernel: 5
+  gaussian_sigma: 0.0
+  augmentation: {rotation_deg: 15, translation_fraction: 0.10, intensity_jitter: 0.10, contrast_scale: [0.90, 1.10], horizontal_flip: true, vertical_flip: true}
+  sliding_window: {patch_size: 64, stride: 32, variance_threshold: 0.0005, positive_iou: 0.50, negative_iou: 0.10, point_positive_radius: 12, point_exclusion_radius: 24}
+wavelet:
+  family: db4
+  levels: 3
+  raw_features: 36
+  pca_variance_grid: [0.90, 0.95, 0.99]
+  pca_default: 0.95
+  whiten: false
+model:
+  efficientnet: {name: tf_efficientnetv2_s.in21k_ft_in1k, projection_dim: 128, cbam_reduction: 16, cbam_spatial_kernel: 7}
+  vit: {name: vit_base_patch16_224.augreg_in21k_ft_in1k, patch_size: 16, layers: 12, heads: 12, embedding_dim: 768, projection_dim: 256}
+  fusion: {input_dim_if_pca20: 404, hidden_dim: 256, heads: 4, batch_first: true}
+fuzzy:
+  rules: 12
+  type_reduction: karnik_mendel
+  max_iterations: 50
+  tolerance: 0.0001
+  fuzzy_decision_threshold: 0.5
+  sigma_uncertainty_fraction: 0.20
+  consequent_centroids: {likely_benign: 0.10, uncertain: 0.40, moderate: 0.60, likely_malignant: 0.90}
+  note: consequent centroids and embedding-to-linguistic mapping are implementation choices because the manuscript does not numerically specify them.
+art:
+  vigilance_grid: [0.70, 0.80, 0.85, 0.90]
+  vigilance: 0.85
+  beta_grid: [0.30, 0.50, 0.70]
+  beta: 0.50
+  mapping: unrestricted_categories_plus_majority_vote
+training:
+  optimizer: Adam
+  learning_rate_grid: [0.0001, 0.00005]
+  batch_size_grid: [8, 16, 32]
+  weight_decay: 0.0001
+  max_epochs: 50
+  early_stopping_patience: 5
+  inner_cv: 3
+  outer_cv: 5
+  threshold: validation_youden_J
+statistics:
+  bootstrap_iterations: 1000
+  tests: [McNemar, Wilcoxon_signed_rank]
