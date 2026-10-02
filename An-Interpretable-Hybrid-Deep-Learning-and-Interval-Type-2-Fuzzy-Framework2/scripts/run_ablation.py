@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 """Reproduce a transparent version of Table 6 using shared outer folds.
-
-Rows whose exact optimization recipe is not fully specified in the manuscript
-are implemented using leakage-safe, documented choices. The generated table is
-therefore a reproducible re-run, not a hard-coded copy of manuscript numbers.
 """
 from __future__ import annotations
 import argparse
